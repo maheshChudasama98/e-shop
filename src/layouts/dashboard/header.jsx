@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -29,29 +28,30 @@ export default function Header({ onOpenNav, isActive, setIsActive }) {
   const { pageHerder } = useSelector((state) => state?.common);
 
   const renderContent = (
-    <>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+        height: '100vh', // or parent height
+        px: 2,
+      }}
+    >
       {!lgUp && (
         <IconButton onClick={onOpenNav} sx={{ mr: 1 }}>
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
       )}
-      <Box sx={{ flexGrow: 1 }} />
 
-      <Box sx={{ width: '-webkit-fill-available' }}>
-        <Typography variant="normal" color="text.dark">
-          {pageHerder}
-        </Typography>
-      </Box>
+      <Typography variant="body12" color="text.dark" fontWeight={600}>
+        {pageHerder}
+      </Typography>
 
-      <Stack
-        direction="row"
-        alignItems="center"
-        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-        spacing={1}
-      >
+      <Stack direction="row" alignItems="center" spacing={1}>
         <AccountPopover />
       </Stack>
-    </>
+    </Box>
   );
 
   return (
@@ -75,14 +75,7 @@ export default function Header({ onOpenNav, isActive, setIsActive }) {
         boxShadow: shadows()[3],
       }}
     >
-      <Toolbar
-        sx={{
-          height: 1,
-          // px: { lg: 5 },
-        }}
-      >
-        {renderContent}
-      </Toolbar>
+      {renderContent}
     </AppBar>
   );
 }

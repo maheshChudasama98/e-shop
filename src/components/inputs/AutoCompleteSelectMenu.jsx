@@ -38,17 +38,17 @@ export const AutoCompleteSelectMenu = ({
       {/* Custom Label */}
       <Typography
         sx={{
-          fontSize: 13,
+          fontSize: 12,
           padding: '0px',
           marginBottom: '0px',
           color:
             formik.touched[field] && Boolean(formik.errors[field])
               ? (theme) => theme.palette.error.main
-              : (theme) => theme.palette.grey[1000],
+              : (theme) => theme.palette.grey[600],
         }}
       >
         {label}
-        {required && <span style={{ color: 'red' }}> *</span>}
+        {required && <span style={{ color: 'red', fontSize: 14 }}> *</span>}
       </Typography>
 
       {/* Autocomplete Field */}
@@ -90,7 +90,7 @@ export const AutoCompleteSelectMenu = ({
           popper: {
             sx: {
               '& .MuiAutocomplete-paper': {
-                boxShadow: shadows()[10],
+                boxShadow: shadows()[15],
               },
             },
           },

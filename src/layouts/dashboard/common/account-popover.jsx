@@ -28,7 +28,7 @@ export default function AccountPopover() {
     <>
       <Avatar
         onClick={handleOpen}
-        sx={{ width: 38, height: 38 }}
+        sx={{ width: 30, height: 30 }}
         src={defaultImageUrl('/assets/images/avatars/avatar_5.jpg')}
         variant="rounded"
       />

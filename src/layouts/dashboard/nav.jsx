@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
-import { alpha } from '@mui/material/styles';
+// import { alpha } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -22,6 +22,10 @@ import { logout } from 'src/utils/auth-utils';
 import { NAV } from './config-layout';
 import { adminNavConfig, companyNavConfig } from './config-navigation';
 import { shadows } from 'src/theme/shadows';
+
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +57,7 @@ export default function Nav({ openNav, onCloseNav, isActive }) {
   }, []);
 
   const renderMenu = (
-    <Stack component="nav" spacing={1} sx={{ px: isActive ? 1 : 2 }}>
+    <Stack component="nav" spacing={0.8} sx={{ px: isActive ? 1 : 1 }}>
       <>
         {filterNavItems.map((item) => (
           <NavItem
@@ -74,11 +78,11 @@ export default function Nav({ openNav, onCloseNav, isActive }) {
             typography: 'body1',
             color: 'text.dark',
             textTransform: 'capitalize',
-            border: (theme) => `solid 1px ${alpha(theme.palette.primary.main, 0.3)} `,
+            // border: (theme) => `solid 1px ${alpha(theme.palette.primary.main, 0.3)} `,
           }}
         >
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Typography variant="small">Logout</Typography>
+            <Typography variant="body12">Logout</Typography>
           </Stack>
         </ListItemButton>
       </>
@@ -173,37 +177,66 @@ function NavItem({ item, setOpenChild, openChild, setTitle, title }) {
   };
 
   return (
-    <Box sx={{ mb: 2 }}>
+    <Box sx={{}}>
       <ListItemButton
         component={RouterLink}
         href={item.path}
         onClick={() => toggleOpen(item)}
         sx={{
-          borderRadius: 100,
-          typography: 'body1',
+          borderRadius: 5,
+          typography: 'body12',
           color: 'text.dark',
+          px: 1.5,
+          py: 0.8,
           textTransform: 'capitalize',
-          border: (theme) => `solid 1px ${alpha(theme.palette.primary.main, 0.3)} `,
+          // border: (theme) => `solid 1px ${alpha(theme.palette.primary.main, 0.5)} `,
           ...(active && {
             color: 'text.light',
             border: 'none',
             typography: 'bold',
             bgcolor: (theme) => theme.palette.background.dark,
-
             '&:hover': {
               bgcolor: (theme) => theme.palette.background.dark,
             },
           }),
         }}
       >
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-          {active && (
-            <Box component="span" sx={{ width: 24, height: 24 }}>
-              {item?.icon}
-            </Box>
-          )}
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
+        >
+          <Stack direction="row" spacing={1} alignItems="center">
+            {active && (
+              <Box
+                component="span"
+                sx={{
+                  width: 12,
+                  height: 12,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {item?.icon}
+              </Box>
+            )}
 
-          <Typography variant="small">{item?.title} </Typography>
+            <Typography variant="body12">{item?.title}</Typography>
+          </Stack>
+
+          {/* 👉 Show icon only if children exist */}
+          {showChildren &&
+            (openChild && item.title === title ? (
+              <ExpandMoreIcon fontSize="small" />
+            ) : (
+              <ChevronRightIcon fontSize="small" />
+            ))}
         </Stack>
       </ListItemButton>
       {showChildren && item.title === title && (
@@ -212,35 +245,40 @@ function NavItem({ item, setOpenChild, openChild, setTitle, title }) {
             spacing={1}
             sx={{
               mx: 2,
-              borderRadius: '0px 0px 10px 10px',
+              borderRadius: '0px 0px 5px 5px',
               color: 'text.primary',
               border: (theme) => `1px solid ${theme.palette.success.light}`,
               borderTop: 'none',
+              py: 0.5,
+              px: 1,
             }}
           >
             {item.child
               .filter((child) => child.display)
               .map((child) => {
                 const activeChild = child.path === pathname;
-
                 return (
                   <Typography
                     sx={{
-                      typography: 'body1',
+                      typography: 'body12',
                       color: 'text.dark',
                       textDecoration: 'none',
                       textTransform: 'capitalize',
-                      px: 2,
-                      py: 0.5,
+                      // pb: 0.1,
                       border: 'none',
-                      justifyContent: 'space-between',
                       ...(activeChild && {
-                        typography: 'bold',
+                        typography: 'body12',
+                        fontWeight: 800,
                       }),
                     }}
                     href={child.path}
                     component={RouterLink}
                   >
+                    {activeChild ? (
+                      <i className="fa-solid fa-circle-dot fa-xs" />
+                    ) : (
+                      <i className="fa-regular fa-circle-dot fa-xs" />
+                    )}{' '}
                     {child?.title}
                   </Typography>
                 );

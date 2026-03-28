@@ -23,8 +23,8 @@ export const CustomBackButton = ({ btnStr = 'Back', routerSrt, backAction }) => 
       sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer' }}
       onClick={handleClick}
     >
-      <i className="fa-solid fa-angle-left" />
-      <Typography variant="subtitle2" sx={{ textDecoration: 'underline' }}>
+      <i className="fa-solid fa-angle-left fa-xs" />
+      <Typography variant="body12" sx={{ textDecoration: 'underline', fontWeight: 600 }}>
         {btnStr}
       </Typography>
     </Box>

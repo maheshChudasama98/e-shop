@@ -263,80 +263,40 @@ export default function Index() {
                 callBack={setSearch}
               />
             </Box>
-            <Box
-              display="flex"
-              alignItems="center"
-              gap={1}
-              bgcolor="#F7F8FA"
-              height="40px"
-              px="10px"
-              borderRadius="5px"
-            >
-              <Typography fontSize={14} color="text.dark" fontWeight={400}>
-                Role:
-              </Typography>
-              <CustomSelect
-                menuList={[
-                  { id: -1, name: 'All' },
-                  ...(selectors?.roles?.map((item) => ({
-                    id: item.role_id,
-                    name: item.role_name,
-                  })) || []),
-                ]}
-                valueKey="id"
-                labelKey="name"
-                defaultValue={filerRole}
-                callBackAction={(e) => {
-                  setFilerRole(e);
-                }}
-                sx={{
-                  height: '40px',
-                  '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                  '& .MuiSelect-select': {
-                    padding: '0px 15px 0 0px',
-                    fontSize: '14px',
-                    fontWeight: 600,
-                  },
-                }}
-              />
-            </Box>
-            <Box
-              display="flex"
-              alignItems="center"
-              gap={1}
-              bgcolor="#F7F8FA"
-              height="40px"
-              px="10px"
-              borderRadius="5px"
-            >
-              <Typography fontSize={14} color="text.dark" fontWeight={400}>
-                Status:
-              </Typography>
-              <CustomSelect
-                menuList={[
-                  { id: -1, name: 'All' },
-                  ...(selectors?.user_status?.map((item) => ({
-                    id: item.value,
-                    name: item.label,
-                  })) || []),
-                ]}
-                valueKey="id"
-                labelKey="name"
-                defaultValue={filerStatus}
-                callBackAction={(e) => {
-                  setFilerStatus(e);
-                }}
-                sx={{
-                  height: '40px',
-                  '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                  '& .MuiSelect-select': {
-                    padding: '0px 15px 0 0px',
-                    fontSize: '14px',
-                    fontWeight: 600,
-                  },
-                }}
-              />
-            </Box>
+
+            <CustomSelect
+              label="Roles"
+              menuList={[
+                { id: -1, name: 'All' },
+                ...(selectors?.roles?.map((item) => ({
+                  id: item.role_id,
+                  name: item.role_name,
+                })) || []),
+              ]}
+              valueKey="id"
+              labelKey="name"
+              defaultValue={filerRole}
+              callBackAction={(e) => {
+                setFilerRole(e);
+              }}
+            />
+
+            <CustomSelect
+              label=" Status"
+              menuList={[
+                { id: -1, name: 'All' },
+                ...(selectors?.user_status?.map((item) => ({
+                  id: item.value,
+                  name: item.label,
+                })) || []),
+              ]}
+              valueKey="id"
+              labelKey="name"
+              defaultValue={filerStatus}
+              callBackAction={(e) => {
+                setFilerStatus(e);
+              }}
+            />
             <Typography fontWeight={700} color="primary.main">
               Total: {totalRecode}
             </Typography>

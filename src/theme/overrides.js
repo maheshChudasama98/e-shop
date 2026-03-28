@@ -61,9 +61,9 @@ export function overrides(theme) {
     MuiButton: {
       styleOverrides: {
         root: {
-          fontSize: 14,
-          borderRadius: '5px',
-          boxShadow: 'none',
+          fontSize: 12,
+          borderRadius: 5,
+          // boxShadow: 'none',
           fontWeight: 500,
           padding: '5px 15px',
         },
@@ -102,13 +102,13 @@ export function overrides(theme) {
       styleOverrides: {
         root: {
           '& .MuiOutlinedInput-root': {
-            fontSize: 14,
+            fontSize: 12,
             borderRadius: 5,
             backgroundColor: theme.palette.grey[200],
             minHeight: 36,
             border: 'none',
             '& .MuiOutlinedInput-input': {
-              padding: '10px 12px',
+              padding: '10px 10px',
               height: 'auto',
               border: 'none',
             },
@@ -139,19 +139,19 @@ export function overrides(theme) {
           position: 'static',
           transform: 'none',
           marginBottom: 1,
-          fontSize: 13,
+          fontSize: 12,
           fontWeight: 100,
-          color: theme.palette.grey[1000],
+          color: theme.palette.grey[600],
           '&.Mui-focused': {
             // color: theme.palette.grey[1000],
-            color: theme.palette.grey[1000],
+            color: theme.palette.grey[600],
           },
           '&.Mui-error': {
-            color: theme.palette.grey[1000],
-            // color: theme.palette.error.main,
+            // color: theme.palette.grey[600],
+            color: theme.palette.error.main,
           },
           '&.Mui-error.Mui-focused': {
-            color: theme.palette.grey[1000],
+            color: theme.palette.grey[600],
             // color: theme.palette.error.main,
           },
         },
@@ -264,7 +264,7 @@ export function overrides(theme) {
       styleOverrides: {
         root: {
           '& .MuiOutlinedInput-root': {
-            fontSize: 14,
+            fontSize: 12,
             borderRadius: 5,
             backgroundColor: theme.palette.grey[200],
             minHeight: 36, // Optional: control overall height of root
@@ -313,10 +313,10 @@ export function overrides(theme) {
           borderRadius: Number(theme.shape.borderRadius) * 0.6,
           minWidth: 0,
           marginRight: 6,
-          padding: '6px 12px',
+          padding: '1px 10px',
           fontWeight: 100,
-          fontSize: 14,
-          minHeight: 35,
+          fontSize: 12,
+          minHeight: 30,
           overflow: 'visible',
           color: theme.palette.text.dark,
 

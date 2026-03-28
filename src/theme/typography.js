@@ -136,7 +136,7 @@ export const typography = {
     fontFamily: mainFont,
     ...responsiveFontSizes({ xs: 18, sm: 18, md: 18, lg: 18 }),
   },
-  bold: {
+  bold: { 
     fontWeight: 700,
     lineHeight: 1.5,
     display: 'block',
@@ -148,7 +148,7 @@ export const typography = {
     display: 'block',
     fontFamily: mainFont,
     lineHeight: 22 / 14,
-    ...responsiveFontSizes({ xs: 14, sm: 14, md: 16, lg: 16 }),
+    ...responsiveFontSizes({ xs: 12, sm: 12, md: 14, lg: 14 }),
   },
   tableHead: {
     fontWeight: 600,

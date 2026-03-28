@@ -286,17 +286,13 @@ export default function ProductModifyForm() {
     <Box>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 12 }}>
-          <Card sx={{ p: 1 }}>
-            <Stack
-              direction="row"
-              spacing={2}
-              sx={{ justifyContent: 'space-between', m: 1, alignItems: 'center' }}
-            >
+          <Card sx={{ p: 1.5 }}>
+            <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
               <Stack direction="row" spacing={3} sx={{ alignItems: 'center' }}>
                 <CustomBackButton />
 
                 <Stack spacing={0.5}>
-                  <Typography variant="h6" color="text.primary">
+                  <Typography variant="normal" color="text.primary">
                     {productDetails?.product_name}
                   </Typography>
                 </Stack>
@@ -327,11 +323,7 @@ export default function ProductModifyForm() {
         </Grid>
 
         <Grid size={{ xs: 12, md: 3 }}>
-          <Card sx={{ p: 2 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Product Details
-            </Typography>
-
+          <Card sx={{ p: 1.5 }}>
             <Stack spacing={1}>
               <Box>
                 <Typography variant="body2" color="text.secondary">

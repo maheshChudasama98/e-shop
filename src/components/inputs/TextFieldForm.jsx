@@ -144,7 +144,7 @@ export function TextFieldForm({
       sx={{
         '& .MuiInputLabel-asterisk': {
           color: 'red',
-          fontSize: 18,
+          fontSize: 14,
         },
         '& input': {
           textAlign: isAmount || isRight ? 'right' : 'left',
