@@ -176,7 +176,7 @@ export function overrides(theme) {
         root: {
           // boxShadow: theme.customShadows.card,
           boxShadow: shadows()[3],
-          borderRadius: Number(theme.shape.borderRadius) * 0.5,
+          borderRadius: Number(theme.shape.borderRadius) * 1.5,
           position: 'relative',
           zIndex: 0,
         },

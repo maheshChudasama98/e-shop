@@ -1,6 +1,4 @@
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { ADMIN_ROUTES } from 'src/routes/routes';
 
 import React, { useState, useEffect } from 'react';
 
@@ -10,21 +8,25 @@ import Button from '@mui/material/Button';
 import { Chip, Skeleton, Stack, Typography } from '@mui/material';
 
 import { DataNotFound } from 'src/components/DataNotFound';
-import { CustomPagination, CustomSearchInput, CustomSelect } from 'src/components/CustomComponents';
+import { CustomPagination, CustomSearchInput } from 'src/components/CustomComponents';
 
 import { Table } from 'antd';
 import { sweetAlertQuestion, sweetAlerts, sweetAlertSuccess } from 'src/utils/sweet-alerts';
 
 import { fDateTime12hr } from 'src/utils/format-time';
-import { fMobileNumber, fText } from 'src/utils/format-text';
-import { UsersDeleteService, UsersListService } from 'src/Services/user.services';
-import UserModifyModal from './UserModifyModal';
+import { fText } from 'src/utils/format-text';
+import ProductAdd from './ProductAddModel';
 import { SelectorsService } from 'src/Services/master.services';
 import { getDisplayData } from 'src/utils/utils';
+import { ProductDeleteService } from 'src/Services/product.services';
+import { formatToINR } from 'src/utils/format-number';
+import { useRouter } from 'src/routes/hooks';
+import { OrdersListService } from 'src/Services/orders.services';
+import { ADMIN_ROUTES } from 'src/routes/routes';
 
 export default function Index() {
+  const router = useRouter();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [order, setOrder] = useState(null);
   const [field, setField] = useState(null);
@@ -36,8 +38,6 @@ export default function Index() {
   const [list, setList] = useState([]);
   const [apiFlag, setApiFlag] = useState(false);
   const [search, setSearch] = useState('');
-  const [filerRole, setFilerRole] = useState(-1);
-  const [filerStatus, setFilerStatus] = useState(-1);
   const [loadingLoader, setLoadingLoader] = useState(false);
 
   const [editObject, setEditObject] = useState({});
@@ -52,16 +52,16 @@ export default function Index() {
 
   const DeleteActions = (id) => {
     sweetAlertQuestion(
-      'This user will be permanently deleted. You won’t be able to recover it.',
-      'Delete User?'
+      'This Product will be permanently deleted. You won’t be able to recover it.',
+      'Delete Product?'
     )
       .then((result) => {
         if (result === 'Yes') {
           dispatch(
-            UsersDeleteService({ user_id: id }, (res) => {
+            ProductDeleteService({ product_id: id }, (res) => {
               if (res?.status) {
                 setApiFlag(!apiFlag);
-                sweetAlertSuccess('User deleted successfully').then(() => {});
+                sweetAlertSuccess('Product deleted successfully').then(() => {});
               } else {
                 sweetAlerts('error', res?.message);
               }
@@ -76,79 +76,122 @@ export default function Index() {
 
   const columns = [
     {
-      title: 'First Name',
-      dataIndex: 'first_name',
-      key: 'first_name',
-      width: 150,
-      sorter: true,
-      ellipsis: true,
-      render: (item) => fText(item),
-    },
-    {
-      title: 'Last Name',
-      dataIndex: 'last_name',
-      key: 'last_name',
-      width: 150,
-      sorter: true,
-      ellipsis: true,
-      render: (item) => fText(item),
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: 'Order',
+      dataIndex: 'order_number',
+      key: 'order_number',
       width: 150,
       sorter: true,
       ellipsis: true,
     },
     {
-      title: 'Phone',
-      dataIndex: 'phone',
-      key: 'phone',
+      title: 'Payment',
+      dataIndex: 'payment_status',
+      key: 'payment_status',
       width: 150,
-      sorter: true,
       ellipsis: true,
-      render: (item) => fMobileNumber(item),
-    },
-    {
-      title: 'Role',
-      dataIndex: 'role_id',
-      key: 'role_id',
-      width: 150,
       sorter: true,
       render: (value) => {
-        const roleData = getDisplayData({
-          list: selectors?.roles || [],
-          value,
-          valueKey: 'role_id',
-          labelKey: 'role_name',
-        });
-        return roleData.label;
-      },
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      width: 120,
-      sorter: true,
-      render: (value) => {
-        const roleData = getDisplayData({
-          list: selectors?.user_status || [],
+        const data = getDisplayData({
+          list: selectors?.payment_status || [],
           value,
         });
         return (
           <Chip
             sx={{
-              color: roleData.textColor || '#1b925e',
-              backgroundColor: roleData.bgColor || '#dbf6e5',
+              color: data.textColor || '#1b925e',
+              backgroundColor: data.bgColor || '#dbf6e5',
               fontWeight: 500,
             }}
-            label={roleData.label}
+            label={data.label}
           />
         );
       },
     },
+    {
+      title: 'Status',
+      dataIndex: 'order_status',
+      key: 'order_status',
+      width: 150,
+      ellipsis: true,
+      sorter: true,
+      render: (value) => {
+        const data = getDisplayData({
+          list: selectors?.order_status || [],
+          value,
+        });
+        return (
+          <Chip
+            sx={{
+              color: data.textColor || '#1b925e',
+              backgroundColor: data.bgColor || '#dbf6e5',
+              fontWeight: 500,
+            }}
+            label={data.label}
+          />
+        );
+      },
+    },
+    {
+      title: 'Amount',
+      dataIndex: 'final_amount',
+      key: 'final_amount',
+      width: 150,
+      sorter: true,
+      ellipsis: true,
+      align: 'right',
+      render: (item) => formatToINR(item),
+    },
+    {
+      title: 'Method',
+      dataIndex: 'payment_method',
+      key: 'payment_method',
+      width: 150,
+      ellipsis: true,
+      sorter: true,
+      render: (value) => {
+        const data = getDisplayData({
+          list: selectors?.payment_method || [],
+          value,
+        });
+        return (
+          <Chip
+            sx={{
+              color: data.textColor || '#1b925e',
+              backgroundColor: data.bgColor || '#dbf6e5',
+              fontWeight: 500,
+            }}
+            label={data.label}
+          />
+        );
+      },
+    },
+    {
+      title: 'Created By',
+      dataIndex: 'created_by',
+      key: 'created_by',
+      width: 150,
+      ellipsis: true,
+      sorter: true,
+      render: (item) => fText(item),
+    },
+    {
+      title: 'User',
+      dataIndex: 'user',
+      key: 'user',
+      width: 150,
+      ellipsis: true,
+      render: (_, item) => `${fText(item?.user?.first_name)}  ${fText(item?.user?.last_name)}`,
+    },
+    {
+      title: 'Items',
+      dataIndex: 'items',
+      key: 'items',
+      width: 150,
+      ellipsis: true,
+      align: 'right',
+      render: (_, item) => item?.order_items?.length || 0,
+    },
+
     {
       title: 'Created At',
       dataIndex: 'createdAt',
@@ -173,7 +216,7 @@ export default function Index() {
       key: 'action',
       fixed: 'right',
       align: 'center',
-      width: 10,
+      width: 90,
       render: (_, item) => (
         <Stack spacing={1} direction="row" sx={{ justifyContent: 'center' }}>
           <Button
@@ -185,15 +228,16 @@ export default function Index() {
               setEditObject(item);
             }}
           >
-            <i className="fa-solid fa-pen-to-square" />
+            <i className="fa-solid fa-file-pen" />
           </Button>
+
           <Button
             variant="outlined"
             color="error"
             className="mui-action-button"
             onClick={(e) => {
               e.stopPropagation();
-              DeleteActions(item?.user_id);
+              DeleteActions(item?.product_id);
             }}
           >
             <i className="fa-solid fa-trash" />
@@ -210,14 +254,14 @@ export default function Index() {
       order,
       field,
       search,
-      role_id: filerRole !== -1 ? filerRole : null,
-      status: filerStatus !== -1 ? filerStatus : null,
+      // role_id: filerRole !== -1 ? filerRole : null,
+      // status: filerStatus !== -1 ? filerStatus : null,
     };
 
     setLoadingLoader(true);
 
     dispatch(
-      UsersListService(payLoad, (res) => {
+      OrdersListService(payLoad, (res) => {
         if (res?.status) {
           setLoadingLoader(false);
           setList(res?.data?.list);
@@ -225,7 +269,7 @@ export default function Index() {
         }
       })
     );
-  }, [apiFlag, search, filerRole, filerStatus, page, pageSize]);
+  }, [apiFlag, search, page, pageSize]);
 
   useEffect(() => {
     setPage(1);
@@ -234,11 +278,14 @@ export default function Index() {
 
   useEffect(() => {
     dispatch(
-      SelectorsService({ roles: true, user_status: true }, (res) => {
-        if (res?.status) {
-          setSelectors(res?.data);
+      SelectorsService(
+        { order_status: true, payment_status: true, payment_method: true },
+        (res) => {
+          if (res?.status) {
+            setSelectors(res?.data);
+          }
         }
-      })
+      )
     );
   }, []);
 
@@ -246,9 +293,9 @@ export default function Index() {
     <Card>
       <Stack spacing={2}>
         <Stack
-          spacing={2}
           sx={{ px: 1.5, pt: 1.5 }}
           direction={{ xs: 'column', sm: 'row' }}
+          spacing={2}
           alignItems={{ sm: 'center' }}
           justifyContent={{ sm: 'space-between' }}
         >
@@ -265,39 +312,6 @@ export default function Index() {
               />
             </Box>
 
-            <CustomSelect
-              label="Roles"
-              menuList={[
-                { id: -1, name: 'All' },
-                ...(selectors?.roles?.map((item) => ({
-                  id: item.role_id,
-                  name: item.role_name,
-                })) || []),
-              ]}
-              valueKey="id"
-              labelKey="name"
-              defaultValue={filerRole}
-              callBackAction={(e) => {
-                setFilerRole(e);
-              }}
-            />
-
-            <CustomSelect
-              label=" Status"
-              menuList={[
-                { id: -1, name: 'All' },
-                ...(selectors?.user_status?.map((item) => ({
-                  id: item.value,
-                  name: item.label,
-                })) || []),
-              ]}
-              valueKey="id"
-              labelKey="name"
-              defaultValue={filerStatus}
-              callBackAction={(e) => {
-                setFilerStatus(e);
-              }}
-            />
             <Typography fontWeight={700} color="primary.main">
               Total: {totalRecode}
             </Typography>
@@ -308,7 +322,6 @@ export default function Index() {
               variant="contained"
               onClick={() => {
                 setModifyModel(true);
-                setEditObject({});
               }}
             >
               Add
@@ -351,11 +364,12 @@ export default function Index() {
                 }
                 scroll={{ x: 'max-content' }}
                 pagination={false}
-                rowKey="user_id"
+                rowKey="product_id"
                 onRow={(record) => ({
                   onClick: () => {
-                    navigate(ADMIN_ROUTES.USER_DETAILS.replace(':id', record?.user_id));
+                    router.push(ADMIN_ROUTES.ORDER_DETAILS.replace(':id', record.order_id));
                   },
+                  style: { cursor: 'pointer' },
                 })}
                 onChange={(_, __, sorter) => {
                   if (sorter?.field && sorter?.order) {
@@ -384,7 +398,7 @@ export default function Index() {
           <DataNotFound />
         )}
 
-        <UserModifyModal
+        <ProductAdd
           open={modifyModel}
           handleClose={() => {
             setModifyModel(false);

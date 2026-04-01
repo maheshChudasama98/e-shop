@@ -28,6 +28,10 @@ export const ADMIN_ROUTES = {
   DASHBOARD: '/admin/dashboard',
 
   USER_MANAGEMENT_LIST: '/admin/users-list',
+  USER_DETAILS: '/admin/user-details/:id',
+
+  ORDERS_MANAGEMENT_LIST: '/admin/orders/list',
+  ORDER_DETAILS: '/admin/orders/detail/:id',
 
   ROLES_MANAGEMENT_LIST: '/admin/master-table/roles-list',
   CATEGORIES_MANAGEMENT_LIST: '/admin/master-table/categories-list',

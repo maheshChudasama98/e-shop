@@ -61,7 +61,7 @@ export function GoogleAddress({ callBackAction }) {
 
     if (typeof window !== 'undefined' && !loaded.current) {
         loadScript(
-            `https://maps.googleapis.com/maps/api/js?key=${__GOOGLE_MAPS_API_KEY__}&libraries=places&sensor=false`,
+            `https://maps.googleapis.com/maps/api/js?key=AIzaSyC1-3FrN3ye1rmqMvuwmVosD54Xt4GbFOk&libraries=places&sensor=false`,
             document.querySelector('head'),
             'google-maps'
         ).then(() => {

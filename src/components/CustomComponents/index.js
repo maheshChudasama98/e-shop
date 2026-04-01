@@ -13,4 +13,5 @@ export { CustomSearchInput } from './CustomSearchInput';
 export { CustomSuccessModel } from './CustomSuccessModel';
 export { CustomTransactions } from './CustomTransactions';
 export { CustomLabelComponent } from './CustomLabelComponent';
+export { CustomExpandAll } from './CustomExpandAll';
 export { default as CustomPagination } from './CustomPagination';

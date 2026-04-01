@@ -82,8 +82,7 @@ export default function BrandModifyModal({ open, handleClose, backAction, editOb
           enableReinitialize
           initialValues={{
             brand_name: editObject?.brand_name || '',
-            // slug: editObject?.slug || '',
-            status: editObject?.status ?? '',
+            status: editObject?.status ?? 1,
           }}
           validationSchema={Yup.object().shape({
             brand_name: Yup.string()
@@ -91,9 +90,6 @@ export default function BrandModifyModal({ open, handleClose, backAction, editOb
               .min(2, 'Brand name must be at least 2 characters')
               .max(50, 'Brand name must not exceed 50 characters')
               .required('Brand name is required'),
-
-            // slug: Yup.string().nullable(),
-
             status: Yup.number().typeError('Status is required').required('Status is required'),
           })}
           onSubmit={ActionSubmit}
@@ -131,7 +127,6 @@ export default function BrandModifyModal({ open, handleClose, backAction, editOb
                     />
                   </Grid>
 
-                  
                   <Grid size={{ xs: 12 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'end', gap: 1 }}>
                       {dirty && (

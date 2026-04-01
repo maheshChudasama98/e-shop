@@ -16,6 +16,7 @@ export const SignUpPage = lazy(() => import('src/pages/auth/sign.up'));
 // --------- Admin Routes Here ---------  //
 export const AdminDashboardPage = lazy(() => import('src/pages/admin/dashboard'));
 export const UserListPage = lazy(() => import('src/pages/admin/user-management'));
+export const UserDetailPage = lazy(() => import('src/pages/admin/user-management/userDetail'));
 export const RolesPage = lazy(() => import('src/pages/admin/master-tables/roles'));
 export const CategoriesPage = lazy(() => import('src/pages/admin/master-tables/categories'));
 export const BrandsPage = lazy(() => import('src/pages/admin/master-tables/brands'));
@@ -24,6 +25,9 @@ export const ProductsPage = lazy(() => import('src/pages/admin/products'));
 export const ProductAddPage = lazy(() => import('src/pages/admin/products/product.add'));
 
 export const VariantPage = lazy(() => import('src/pages/admin/products/variant'));
+
+export const OrdersPage = lazy(() => import('src/pages/admin/orders'));
+export const OrderDetailPage = lazy(() => import('src/pages/admin/orders/OrderDetailPage'));
 
 export default function Router() {
   const CommRoutes = [
@@ -39,15 +43,19 @@ export default function Router() {
   const AdminRouters = [
     { path: ADMIN_ROUTES.DASHBOARD, element: <AdminDashboardPage />, title: 'Dashboard' },
     { path: ADMIN_ROUTES.USER_MANAGEMENT_LIST, element: <UserListPage />, title: 'user-management' },
+    { path: ADMIN_ROUTES.USER_DETAILS, element: <UserDetailPage />, title: 'user-detail' },
     { path: ADMIN_ROUTES.ROLES_MANAGEMENT_LIST, element: <RolesPage />, title: 'roles-management' },
     { path: ADMIN_ROUTES.CATEGORIES_MANAGEMENT_LIST, element: <CategoriesPage />, title: 'categories-management' },
     { path: ADMIN_ROUTES.BRANDS_MANAGEMENT_LIST, element: <BrandsPage />, title: 'brands-management' },
 
-    // Product-Add , 
+    // Products-Add
     { path: ADMIN_ROUTES.PRODUCTS_LIST, element: <ProductsPage />, title: 'Products' },
     { path: ADMIN_ROUTES.PRODUCT_DETAILS, element: <ProductAddPage />, title: 'Product Add' },
-
     { path: ADMIN_ROUTES.PRODUCT_VARIANT_DETAILS, element: <VariantPage />, title: 'Variant Add' },
+
+    // Orders
+    { path: ADMIN_ROUTES.ORDERS_MANAGEMENT_LIST, element: <OrdersPage />, title: 'Orders' },
+    { path: ADMIN_ROUTES.ORDER_DETAILS, element: <OrderDetailPage />, title: 'Order Details' },
   ];
 
   const Routers = [];

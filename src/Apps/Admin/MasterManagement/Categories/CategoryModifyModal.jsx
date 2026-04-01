@@ -36,7 +36,11 @@ export default function CategoryModifyModal({ open, handleClose, backAction, edi
         if (res?.status) {
           setModelOpenFlag(false);
           backAction();
-          sweetAlertSuccess( editObject?.category_id ? 'Category updated successfully' : 'Category added successfully')
+          sweetAlertSuccess(
+            editObject?.category_id
+              ? 'Category updated successfully'
+              : 'Category added successfully'
+          );
         } else {
           setErrorMsg(res?.message);
         }
@@ -77,7 +81,7 @@ export default function CategoryModifyModal({ open, handleClose, backAction, edi
           initialValues={{
             category_name: editObject?.category_name || '',
             slug: editObject?.slug || '',
-            status: editObject?.status || '',
+            status: editObject?.status || 1,
           }}
           validationSchema={Yup.object().shape({
             category_name: Yup.string()
@@ -103,7 +107,7 @@ export default function CategoryModifyModal({ open, handleClose, backAction, edi
                   )}
 
                   <Grid size={{ xs: 12 }}>
-                    <TextFieldForm  
+                    <TextFieldForm
                       formik={props}
                       label="Category Name"
                       field="category_name"

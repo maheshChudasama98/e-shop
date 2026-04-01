@@ -24,6 +24,11 @@ export const adminNavConfig = [
     icon: icon('employees'),
   },
   {
+    title: 'Orders',
+    path: ADMIN_ROUTES.ORDERS_MANAGEMENT_LIST,
+    icon: icon('employees'),
+  },
+  {
     title: 'Master Tables',
     path: ADMIN_ROUTES.ROLES_MANAGEMENT_LIST,
     icon: icon('employees'),

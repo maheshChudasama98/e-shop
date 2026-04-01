@@ -5,6 +5,7 @@ export const ImgUrl = `${apiURL}/public/`;
 
 export const DevelopMood = true;
 export const LogoDefaultPath = 'Logos/sidebare.png';
+export const DefaultProductImage = '/assets/images/avatars/avatar_5.jpg';
 
 // Static Role ids
 export const AdminRoleId = 1;
