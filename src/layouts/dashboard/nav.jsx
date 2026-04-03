@@ -23,7 +23,6 @@ import { NAV } from './config-layout';
 import { adminNavConfig, companyNavConfig } from './config-navigation';
 import { shadows } from 'src/theme/shadows';
 
-
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
@@ -100,9 +99,7 @@ export default function Nav({ openNav, onCloseNav, isActive }) {
         },
       }}
     >
-      <Box
-        sx={{ borderBottom: (theme) => `dashed 1px ${theme.palette.grey[300]}`, mb: 2.5, py: 0.5 }}
-      >
+      <Box sx={{ mb: 2.5, py: 0.5 }}>
         {isActive ? <Logo sx={{ m: 'auto', my: 1.5 }} /> : <Logo sx={{ ml: 3.3, my: 1.2 }} />}
       </Box>
       {renderMenu}
@@ -124,7 +121,7 @@ export default function Nav({ openNav, onCloseNav, isActive }) {
             width: isActive ? NAV.SORT_WIDTH : NAV.WIDTH,
             background: (theme) => `${theme.palette.background?.paper}`,
             boxShadow: shadows()[5],
-            borderRight: (theme) => `solid 1px ${theme.palette.primary?.main}`,
+            // borderRight: (theme) => `solid 1px ${theme.palette.primary?.main}`,
           }}
         >
           {renderContent}
@@ -189,7 +186,6 @@ function NavItem({ item, setOpenChild, openChild, setTitle, title }) {
           px: 1.5,
           py: 0.8,
           textTransform: 'capitalize',
-          // border: (theme) => `solid 1px ${alpha(theme.palette.primary.main, 0.5)} `,
           ...(active && {
             color: 'text.light',
             border: 'none',
@@ -244,13 +240,28 @@ function NavItem({ item, setOpenChild, openChild, setTitle, title }) {
           <Stack
             spacing={1}
             sx={{
+              // mx: 2,
+              // // borderRadius: '0px 0px 5px 5px',
+              // color: 'text.primary',
+              // borderLeft: '2px solid',
+              // borderColor: 'grey.400',
+              // borderTop: 'none',
+              // py: 0.5,
+              // px: 1,
               mx: 2,
-              borderRadius: '0px 0px 5px 5px',
               color: 'text.primary',
-              border: (theme) => `1px solid ${theme.palette.success.light}`,
-              borderTop: 'none',
               py: 0.5,
               px: 1,
+              position: 'relative',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                left: -2,
+                top: 1,
+                bottom: 20, // 👈 🔥 increase this to reduce length
+                width: '2px',
+                bgcolor: 'grey.400',
+              },
             }}
           >
             {item.child
@@ -258,30 +269,69 @@ function NavItem({ item, setOpenChild, openChild, setTitle, title }) {
               .map((child) => {
                 const activeChild = child.path === pathname;
                 return (
-                  <Typography
+                  <Box
+                    key={child.path}
                     sx={{
-                      typography: 'body12',
-                      color: 'text.dark',
-                      textDecoration: 'none',
-                      textTransform: 'capitalize',
-                      // pb: 0.1,
-                      border: 'none',
-                      ...(activeChild && {
-                        typography: 'body12',
-                        fontWeight: 800,
-                      }),
+                      position: 'relative',
+                      pl: 1,
+                      // Curved connector
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        left: -10,
+                        top: 2,
+                        width: 12,
+                        height: 12,
+                        borderLeft: '2px solid',
+                        borderBottom: '2px solid',
+                        borderColor: 'grey.400',
+                        borderBottomLeftRadius: '8px',
+                      },
                     }}
-                    href={child.path}
-                    component={RouterLink}
                   >
-                    {activeChild ? (
-                      <i className="fa-solid fa-circle-dot fa-xs" />
-                    ) : (
-                      <i className="fa-regular fa-circle-dot fa-xs" />
-                    )}{' '}
-                    {child?.title}
-                  </Typography>
+                    <Typography
+                      component={RouterLink}
+                      href={child.path}
+                      sx={{
+                        typography: 'body12',
+                        color: 'text.dark',
+                        textDecoration: 'none',
+                        textTransform: 'capitalize',
+
+                        ...(activeChild && {
+                          fontWeight: 700,
+                        }),
+                      }}
+                    >
+                      {child?.title}
+                    </Typography>
+                  </Box>
                 );
+                // return (
+                //   <Typography
+                //     sx={{
+                //       typography: 'body12',
+                //       color: 'text.dark',
+                //       textDecoration: 'none',
+                //       textTransform: 'capitalize',
+                //       // pb: 0.1,
+                //       // border: 'none',
+                //       ...(activeChild && {
+                //         typography: 'body12',
+                //         fontWeight: 700,
+                //       }),
+                //     }}
+                //     href={child.path}
+                //     component={RouterLink}
+                //   >
+                //     {activeChild ? (
+                //       <i className="fa-solid fa-circle-dot fa-xs" />
+                //     ) : (
+                //       <i className="fa-regular fa-circle-dot fa-xs" />
+                //     )}{' '}
+                //     {child?.title}
+                //   </Typography>
+                // );
               })}
           </Stack>
         </Collapse>

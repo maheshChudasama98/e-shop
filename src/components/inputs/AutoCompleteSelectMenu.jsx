@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { shadows } from 'src/theme/shadows';
 
 import { Empty } from 'antd';
+import { FormLabel } from '@mui/material';
 
 export const AutoCompleteSelectMenu = ({
   formik,
@@ -25,22 +25,20 @@ export const AutoCompleteSelectMenu = ({
   ...props
 }) => {
   const handleChange = (e, value) => {
-    const selectedPesticideId = value?.[valueKey] || '';
-    formik.setFieldValue(field, selectedPesticideId);
-
+    const selectedId = value?.[valueKey] || '';
+    formik.setFieldValue(field, selectedId);
+ 
     if (typeof callBackAction === 'function') {
-      callBackAction(selectedPesticideId);
+      callBackAction(value); // Passing the full object instead of just the ID
     }
   };
+
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       {/* Custom Label */}
-      <Typography
+      <FormLabel
         sx={{
-          fontSize: 12,
-          padding: '0px',
-          marginBottom: '0px',
           color:
             formik.touched[field] && Boolean(formik.errors[field])
               ? (theme) => theme.palette.error.main
@@ -49,7 +47,7 @@ export const AutoCompleteSelectMenu = ({
       >
         {label}
         {required && <span style={{ color: 'red', fontSize: 14 }}> *</span>}
-      </Typography>
+      </FormLabel>
 
       {/* Autocomplete Field */}
       <Autocomplete

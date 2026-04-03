@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
-import { Chip, Skeleton, Stack, Typography } from '@mui/material';
+import { Avatar, Chip, Skeleton, Stack, Typography } from '@mui/material';
 
 import { DataNotFound } from 'src/components/DataNotFound';
 import { CustomPagination, CustomSearchInput, CustomSelect } from 'src/components/CustomComponents';
@@ -82,7 +82,14 @@ export default function Index() {
       width: 150,
       sorter: true,
       ellipsis: true,
-      render: (item) => fText(item),
+      render: (item) => (
+        <Stack spacing={1} direction="row" alignItems="center">
+          <Avatar sx={{ width: 34, height: 34 }} variant="rounded" />
+          <Typography fontWeight={700} variant="caption">
+            {fText(item)}
+          </Typography>
+        </Stack>
+      ),
     },
     {
       title: 'Status',
@@ -130,10 +137,10 @@ export default function Index() {
       dataIndex: 'action',
       key: 'action',
       fixed: 'right',
-      align: 'center',
+      align: 'right',
       width: 90,
       render: (_, item) => (
-        <Stack spacing={1} direction="row" sx={{ justifyContent: 'center' }}>
+        <Stack spacing={1} direction="row" sx={{ justifyContent: 'right' }}>
           <Button
             variant="outlined"
             className="mui-action-button"
@@ -201,7 +208,7 @@ export default function Index() {
 
   return (
     <Card>
-      <Stack spacing={2}>
+      <Stack spacing={1.5}>
         <Stack
           sx={{ px: 1.5, pt: 1.5 }}
           direction={{ xs: 'column', sm: 'row' }}

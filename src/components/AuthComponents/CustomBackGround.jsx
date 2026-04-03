@@ -3,76 +3,80 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import Logo from 'src/components/logo';
+import { Stack } from '@mui/system';
+import Logo from '../logo';
+import { Typography } from '@mui/material';
 import { defaultImageUrl } from 'src/utils/utils';
+// import Logo from 'src/components/logo';
 
-export const CustomBackGround = ({ rightContent, imageName }) => {
+export const CustomBackGround = ({ rightContent, imageName, headingText, subText }) => {
   const theme = useTheme();
 
   return (
-    <Box
-      sx={{
-        background: theme.palette.primary.light,
-      }}
-    >
+    <Box>
       <Box
         sx={{
-          background: theme.palette.primary.light,
           height: '100vh',
           overflow: { xs: 'none', lg: 'hidden' },
-          position: 'relative',
         }}
       >
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            zIndex: 1,
-            borderRadius: '50%',
-            backgroundColor: theme.palette.background.light,
-            border: `3px solid ${theme.palette.primary.main}`,
-            transform: 'translate(-25%, 25%)',
-            width: { xs: 0, sm: 0, md: 400, lg: 600 },
-            height: { xs: 0, sm: 0, md: 400, lg: 600 },
-            display: { xs: 'none', sm: 'none', md: 'block' },
-          }}
-        />
-
-        <Grid
-          container
-          sx={{ height: { xs: '50%', md: '100vh' }, background: theme.palette.primary.light }}
-        >
+        <Grid container sx={{ height: { xs: '50%', md: '100vh' } }}>
           <Grid
-            item
-            size={{ xs: 12, md: 6 }}
+            size={{ xs: 12, md: 6, lg: 7.5 }}
             sx={{
-              backgroundColor: theme.palette.primary.light,
-              display: 'flex',
-              padding: { xs: 2, sm: 5, md: 4.5, lg: 6 },
-              overflow: 'hidden',
+              display: { xs: 'none', md: 'block' },
+              height: '100%',
+              backgroundImage: `linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url(${defaultImageUrl(`/assets/background/${imageName}`)})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
             }}
           >
-            <Box sx={{ width: '100%', maxWidth: 600 }}>
-              <Logo sx={{ mb: 0 }} />
-              <Box
-                sx={{
-                  position: 'fixed',
-                  zIndex: 10,
-                  // maxHeight: 400,
-                  width: { xs: 10, sm: '30%', md: '30%', lg: '30%' },
-                  bottom: { xs: 90, sm: 200, md: 80, lg: 100 },
-                  left: { xs: 90, sm: 80, md: 80, lg: 100 },
-                  display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' },
-                }}
-              >
-                <img src={defaultImageUrl(`/assets/svg/${imageName}.svg`)} alt="icon" />
+            <Stack justifyContent="center" alignItems="center" sx={{ height: 1 }}>
+              <Box sx={{ px: 4, maxWidth: 600 }}>
+                {/* HEADING */}
+                <Typography
+                  sx={{
+                    fontSize: { md: '56px', lg: '64px' },
+                    fontWeight: 800,
+                    lineHeight: 1.1,
+                    color: '#5EF2C3',
+                    mb: 3,
+                  }}
+                >
+                  {headingText}
+                </Typography>
+
+                {/* SUBTEXT */}
+                <Typography
+                  sx={{
+                    fontSize: '18px',
+                    lineHeight: 1.8,
+                    color: 'rgba(94, 242, 195, 0.8)',
+                  }}
+                >
+                  {subText}
+                </Typography>
               </Box>
-            </Box>
+            </Stack>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 6 }} sx={{ background: theme.palette.primary.light }}>
-            {rightContent}
+          <Grid
+            size={{ xs: 12, md: 6, lg: 4.5 }}
+            sx={{
+              background: theme.palette.background.light,
+              // height: 1,
+              // display: 'flex',  
+              // justifyContent: 'center',
+              // alignItems: 'center',
+            }}
+          >
+            <Stack justifyContent="center" sx={{ height: 1 }}>
+              <Box sx={{ p: 5, px: { sm: 5, md: 12 } }}>
+                <Logo sx={{ mb: 5, width: 120 }} />
+                {rightContent}
+              </Box>
+            </Stack>
           </Grid>
         </Grid>
       </Box>

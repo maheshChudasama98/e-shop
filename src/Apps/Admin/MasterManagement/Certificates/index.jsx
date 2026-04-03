@@ -1,29 +1,23 @@
 import { useDispatch } from 'react-redux';
-
 import React, { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
-import { Chip, Skeleton, Stack, Typography } from '@mui/material';
+import { Avatar, Skeleton, Stack, Typography } from '@mui/material';
 
 import { DataNotFound } from 'src/components/DataNotFound';
 import { CustomPagination, CustomSearchInput } from 'src/components/CustomComponents';
 
 import { Table } from 'antd';
+import { sweetAlertQuestion, sweetAlerts, sweetAlertSuccess } from 'src/utils/sweet-alerts';
 
 import { fDateTime12hr } from 'src/utils/format-time';
 import { fText } from 'src/utils/format-text';
-import ProductAdd from './ProductAddModel';
-import { SelectorsService } from 'src/Services/master.services';
-import { getDisplayData } from 'src/utils/utils';
-import { formatToINR } from 'src/utils/format-number';
-import { useRouter } from 'src/routes/hooks';
-import { OrdersListService } from 'src/Services/orders.services';
-import { ADMIN_ROUTES } from 'src/routes/routes';
+import CertificatesModifyModal from './CertificatesModifyModal';
+import { CertificateDeleteService, CertificatesListService } from 'src/Services/master.services';
 
 export default function Index() {
-  const router = useRouter();
   const dispatch = useDispatch();
 
   const [order, setOrder] = useState(null);
@@ -41,131 +35,65 @@ export default function Index() {
   const [editObject, setEditObject] = useState({});
   const [modifyModel, setModifyModel] = useState(false);
 
-  const [selectors, setSelectors] = useState({});
-
   const showDisplayAction = () => {
     setModifyModel(false);
     setApiFlag(!apiFlag);
   };
 
+  const DeleteActions = (id) => {
+    sweetAlertQuestion(
+      'This certificate will be permanently deleted. You won’t be able to recover it.',
+      'Delete Certificate?'
+    )
+      .then((result) => {
+        if (result === 'Yes') {
+          dispatch(
+            CertificateDeleteService({ certificate_id: id }, (res) => {
+              if (res?.status) {
+                setApiFlag(!apiFlag);
+                sweetAlertSuccess('Certificate deleted successfully').then(() => {});
+              } else {
+                sweetAlerts('error', res?.message);
+              }
+            })
+          );
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   const columns = [
     {
-      title: 'Order',
-      dataIndex: 'order_number',
-      key: 'order_number',
+      title: 'Certificate Name',
+      dataIndex: 'certificate_name',
+      key: 'certificate_name',
       width: 150,
       sorter: true,
       ellipsis: true,
+      render: (item, record) => (
+        <Stack spacing={1} direction="row" alignItems="center">
+          <Avatar
+            sx={{ width: 30, height: 30, background: '#FFFF', color: record?.certificate_color }}
+          >
+            <i className={record?.certificate_icon} />
+          </Avatar>
+          <Typography fontWeight={700} variant="caption">
+            {fText(item)}
+          </Typography>
+        </Stack>
+      ),
     },
     {
-      title: 'Payment',
-      dataIndex: 'payment_status',
-      key: 'payment_status',
-      width: 150,
-      ellipsis: true,
-      sorter: true,
-      render: (value) => {
-        const data = getDisplayData({
-          list: selectors?.payment_status || [],
-          value,
-        });
-        return (
-          <Chip
-            sx={{
-              color: data.textColor || '#1b925e',
-              backgroundColor: data.bgColor || '#dbf6e5',
-              fontWeight: 500,
-            }}
-            label={data.label}
-          />
-        );
-      },
-    },
-    {
-      title: 'Status',
-      dataIndex: 'order_status',
-      key: 'order_status',
-      width: 150,
-      ellipsis: true,
-      sorter: true,
-      render: (value) => {
-        const data = getDisplayData({
-          list: selectors?.order_status || [],
-          value,
-        });
-        return (
-          <Chip
-            sx={{
-              color: data.textColor || '#1b925e',
-              backgroundColor: data.bgColor || '#dbf6e5',
-              fontWeight: 500,
-            }}
-            label={data.label}
-          />
-        );
-      },
-    },
-    {
-      title: 'Amount',
-      dataIndex: 'final_amount',
-      key: 'final_amount',
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
       width: 150,
       sorter: true,
       ellipsis: true,
-      align: 'right',
-      render: (item) => formatToINR(item),
-    },
-    {
-      title: 'Method',
-      dataIndex: 'payment_method',
-      key: 'payment_method',
-      width: 150,
-      ellipsis: true,
-      sorter: true,
-      render: (value) => {
-        const data = getDisplayData({
-          list: selectors?.payment_method || [],
-          value,
-        });
-        return (
-          <Chip
-            sx={{
-              color: data.textColor || '#1b925e',
-              backgroundColor: data.bgColor || '#dbf6e5',
-              fontWeight: 500,
-            }}
-            label={data.label}
-          />
-        );
-      },
-    },
-    {
-      title: 'Created By',
-      dataIndex: 'created_by',
-      key: 'created_by',
-      width: 150,
-      ellipsis: true,
-      sorter: true,
       render: (item) => fText(item),
     },
-    {
-      title: 'User',
-      dataIndex: 'user',
-      key: 'user',
-      width: 150,
-      ellipsis: true,
-      render: (_, item) => `${fText(item?.user?.first_name)}  ${fText(item?.user?.last_name)}`,
-    },
-    {
-      title: 'Items',
-      dataIndex: 'items',
-      key: 'items',
-      width: 150,
-      ellipsis: true,
-      align: 'right',
-      render: (_, item) => item?.order_items?.length || 0,
-    },
-
     {
       title: 'Created At',
       dataIndex: 'createdAt',
@@ -184,6 +112,40 @@ export default function Index() {
       ellipsis: true,
       render: (item) => fDateTime12hr(item),
     },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      key: 'action',
+      fixed: 'right',
+      align: 'center',
+      width: 90,
+      render: (_, item) => (
+        <Stack spacing={1} direction="row" sx={{ justifyContent: 'center' }}>
+          <Button
+            variant="outlined"
+            className="mui-action-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setModifyModel(true);
+              setEditObject(item);
+            }}
+          >
+            <i className="fa-solid fa-file-pen" />
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            className="mui-action-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              DeleteActions(item?.certificate_id);
+            }}
+          >
+            <i className="fa-solid fa-trash" />
+          </Button>
+        </Stack>
+      ),
+    },
   ];
 
   useEffect(() => {
@@ -193,14 +155,11 @@ export default function Index() {
       order,
       field,
       search,
-      // role_id: filerRole !== -1 ? filerRole : null,
-      // status: filerStatus !== -1 ? filerStatus : null,
     };
-
     setLoadingLoader(true);
 
     dispatch(
-      OrdersListService(payLoad, (res) => {
+      CertificatesListService(payLoad, (res) => {
         if (res?.status) {
           setLoadingLoader(false);
           setList(res?.data?.list);
@@ -215,26 +174,13 @@ export default function Index() {
     setApiFlag(!apiFlag);
   }, [field, order]);
 
-  useEffect(() => {
-    dispatch(
-      SelectorsService(
-        { order_status: true, payment_status: true, payment_method: true },
-        (res) => {
-          if (res?.status) {
-            setSelectors(res?.data);
-          }
-        }
-      )
-    );
-  }, []);
-
   return (
     <Card>
-      <Stack spacing={2}>
+      <Stack spacing={1.5}>
         <Stack
           sx={{ px: 1.5, pt: 1.5 }}
-          direction={{ xs: 'column', sm: 'row' }}
           spacing={2}
+          direction={{ xs: 'column', sm: 'row' }}
           alignItems={{ sm: 'center' }}
           justifyContent={{ sm: 'space-between' }}
         >
@@ -250,7 +196,6 @@ export default function Index() {
                 callBack={setSearch}
               />
             </Box>
-
             <Typography fontWeight={700} color="primary.main">
               Total: {totalRecode}
             </Typography>
@@ -261,8 +206,8 @@ export default function Index() {
               variant="contained"
               onClick={() => {
                 setModifyModel(true);
+                setEditObject({});
               }}
-              disabled
             >
               Add
             </Button>
@@ -304,13 +249,12 @@ export default function Index() {
                 }
                 scroll={{ x: 'max-content' }}
                 pagination={false}
-                rowKey="product_id"
-                onRow={(record) => ({
-                  onClick: () => {
-                    router.push(ADMIN_ROUTES.ORDER_DETAILS.replace(':id', record.order_id));
-                  },
-                  style: { cursor: 'pointer' },
-                })}
+                rowKey="event_id"
+                // onRow={(record) => ({
+                //   onClick: () => {
+                //     navigate(`/user/detail/${record?.event_id}`);
+                //   },
+                // })}
                 onChange={(_, __, sorter) => {
                   if (sorter?.field && sorter?.order) {
                     setField(sorter?.field);
@@ -338,7 +282,7 @@ export default function Index() {
           <DataNotFound />
         )}
 
-        <ProductAdd
+        <CertificatesModifyModal
           open={modifyModel}
           handleClose={() => {
             setModifyModel(false);

@@ -27,6 +27,10 @@ export default function CartTab({ cartItems }) {
       <Stack spacing={2}>
         {cartItems.map((item, index) => (
           <Box key={index}>
+
+            {
+              console.log('item', item)
+            }
             <Grid container spacing={2} alignItems="center">
               <Grid size={{ xs: 3, sm: 2, md: 1 }}>
                 <Avatar

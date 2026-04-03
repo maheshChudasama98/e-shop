@@ -8,7 +8,12 @@ import Button from '@mui/material/Button';
 import { Chip, Skeleton, Stack, Typography } from '@mui/material';
 
 import { DataNotFound } from 'src/components/DataNotFound';
-import { CustomPagination, CustomSearchInput, CustomSelect } from 'src/components/CustomComponents';
+import {
+  CustomExpandAll,
+  CustomPagination,
+  CustomSearchInput,
+  CustomSelect,
+} from 'src/components/CustomComponents';
 
 import { Table } from 'antd';
 import { sweetAlertQuestion, sweetAlerts, sweetAlertSuccess } from 'src/utils/sweet-alerts';
@@ -43,6 +48,8 @@ export default function Index() {
   const [modifyModel, setModifyModel] = useState(false);
 
   const [selectors, setSelectors] = useState({});
+
+  const [expandedRowKeys, setExpandedRowKeys] = useState([]);
 
   const showDisplayAction = () => {
     setModifyModel(false);
@@ -82,7 +89,11 @@ export default function Index() {
       width: 150,
       sorter: true,
       ellipsis: true,
-      render: (item) => fText(item),
+      render: (item) => (
+        <Typography fontWeight={700} variant="caption">
+          {fText(item)}
+        </Typography>
+      ),
     },
     {
       title: 'Slug',
@@ -139,10 +150,22 @@ export default function Index() {
       dataIndex: 'action',
       key: 'action',
       fixed: 'right',
-      align: 'center',
+      align: 'right',
       width: 90,
       render: (_, item) => (
-        <Stack spacing={1} direction="row" sx={{ justifyContent: 'center' }}>
+        <Stack spacing={1} direction="row" sx={{ justifyContent: 'right' }}>
+          <Button
+            variant="outlined"
+            className="mui-action-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setModifyModel(true);
+              setEditObject({ parent_id: item.category_id });
+            }}
+            title="Add Sub Category"
+          >
+            <i className="fa-solid fa-plus" />
+          </Button>
           <Button
             variant="outlined"
             className="mui-action-button"
@@ -169,6 +192,91 @@ export default function Index() {
       ),
     },
   ];
+
+  const columnssub = [
+    {
+      title: 'Category Name',
+      dataIndex: 'category_name',
+      key: 'category_name',
+      width: 150,
+      sorter: true,
+      ellipsis: true,
+      render: (item) => (
+        <Typography fontWeight={700} variant="body12">
+          {fText(item)}
+        </Typography>
+      ),
+    },
+    {
+      title: 'Slug',
+      dataIndex: 'slug',
+      key: 'slug',
+      width: 150,
+      sorter: true,
+      ellipsis: true,
+      render: (item) => fText(item),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      width: 120,
+      sorter: true,
+      render: (value) => {
+        const roleData = getDisplayData({
+          list: selectors?.categories_status || [],
+          value,
+        });
+        return (
+          <Chip
+            sx={{
+              color: roleData.textColor || '#1b925e',
+              backgroundColor: roleData.bgColor || '#dbf6e5',
+              fontWeight: 500,
+            }}
+            label={roleData.label}
+          />
+        );
+      },
+    },
+
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      key: 'action',
+      fixed: 'right',
+      align: 'right',
+      width: 90,
+      render: (_, item) => (
+        <Stack spacing={1} direction="row" sx={{ justifyContent: 'right' }}>
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              setModifyModel(true);
+              setEditObject(item);
+            }}
+          >
+            <i className="fa-solid fa-file-pen" />
+          </Button>
+          <Button
+            color="error"
+            onClick={(e) => {
+              e.stopPropagation();
+              DeleteActions(item?.category_id);
+            }}
+          >
+            <i className="fa-solid fa-trash" />
+          </Button>
+        </Stack>
+      ),
+    },
+  ];
+
+  const handleExpand = (expanded, record) => {
+    setExpandedRowKeys((prev) =>
+      expanded ? [...prev, record?.category_id] : prev.filter((key) => key !== record?.category_id)
+    );
+  };
 
   useEffect(() => {
     const payLoad = {
@@ -210,7 +318,7 @@ export default function Index() {
 
   return (
     <Card>
-      <Stack spacing={2}>
+      <Stack spacing={1.5}>
         <Stack
           sx={{ px: 1.5, pt: 1.5 }}
           direction={{ xs: 'column', sm: 'row' }}
@@ -253,6 +361,12 @@ export default function Index() {
           </Stack>
 
           <Stack spacing={1} direction="row">
+            <CustomExpandAll
+              rows={list}
+              expandedRowKeys={expandedRowKeys}
+              setExpandedRowKeys={setExpandedRowKeys}
+              labelKey="category_id"
+            />
             <Button
               variant="contained"
               onClick={() => {
@@ -260,7 +374,7 @@ export default function Index() {
                 setEditObject({});
               }}
             >
-              Add
+              Add Main Category
             </Button>
           </Stack>
         </Stack>
@@ -300,12 +414,49 @@ export default function Index() {
                 }
                 scroll={{ x: 'max-content' }}
                 pagination={false}
-                rowKey="event_id"
-                // onRow={(record) => ({
-                //   onClick: () => {
-                //     navigate(`/user/detail/${record?.event_id}`);
-                //   },
-                // })}
+                rowKey="category_id"
+                expandable={{
+                  expandedRowKeys,
+                  onExpand: handleExpand,
+                  expandedRowRender: (record) => (
+                    <>
+                      {record?.children_categories && record?.children_categories?.length > 0 ? (
+                        <Box sx={{ ml: 10, p: 0 }}>
+                          <Table
+                            showHeader={false}
+                            className="custom-ant-table"
+                            showSorterTooltip={false}
+                            columns={
+                              !loadingLoader
+                                ? columnssub
+                                : columnssub.map((col) => ({
+                                    ...col,
+                                    render: () => (
+                                      <Skeleton
+                                        variant=""
+                                        animation="wave"
+                                        sx={{ width: '100%', height: 18, borderRadius: 0.5 }}
+                                      />
+                                    ),
+                                  }))
+                            }
+                            dataSource={
+                              !loadingLoader
+                                ? record?.children_categories
+                                : [...Array(pageSize)].map((_, i) => ({
+                                    key: i,
+                                  }))
+                            }
+                            pagination={false}
+                            rowKey="category_id"
+                          />
+                        </Box>
+                      ) : (
+                        <DataNotFound />
+                      )}
+                    </>
+                  ),
+                }}
                 onChange={(_, __, sorter) => {
                   if (sorter?.field && sorter?.order) {
                     setField(sorter?.field);

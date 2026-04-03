@@ -44,7 +44,7 @@ export const CustomExpandAll = ({
         onChange={handleToggleExpandAll}
         sx={{ pointerEvents: 'none' }} // prevent double triggering
       />
-      <Typography variant="small" fontWeight={600}>
+      <Typography variant="caption" fontWeight={600}>
         {allExpanded ? 'Collapse All' : 'Expand All'}
       </Typography>
     </Stack>

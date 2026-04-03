@@ -66,7 +66,7 @@ export default function UserDetails() {
           setAddresses(res.data.addresses);
           setOrders(res.data.orders);
           const cartData = res.data.cart || res.data.user_cart || res.data.user?.cart;
-          setCartItems(cartData?.cart_items || cartData || []);
+          setCartItems(cartData[0]?.cart_items || []);
         }
       })
     );

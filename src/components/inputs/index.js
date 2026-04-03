@@ -9,3 +9,4 @@ export { DateRangePicker } from './DateRangePicker';
 export { MultiImagePicker } from './MultiImagePicker';
 export { AutoCompleteSelectMenu } from './AutoCompleteSelectMenu';
 export { AutoCompleteSelectMultiple } from './AutoCompleteSelectMultiple';
+export { EditorForm } from './EditorForm';

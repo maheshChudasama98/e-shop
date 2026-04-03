@@ -127,7 +127,7 @@ export default function OrderDetailsView() {
 
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 8 }}>
-          <Stack spacing={1}>
+          <Stack spacing={2}>
             <Card>
               <OrderItemsTable items={orderData?.order_items || []} />
               <OrderSummary order={orderData} />

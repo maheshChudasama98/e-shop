@@ -73,7 +73,14 @@ export const CustomSearchInput = ({
         endAdornment: <InputAdornment position="end">{button()}</InputAdornment>,
       }}
       size="small"
-      sx={{ width: 300 }}
+      sx={{
+        width: 300,
+        '& .MuiOutlinedInput-root': {
+          fontSize: 14,
+          borderRadius: 1,
+          minHeight: 36,
+        },
+      }}
       {...props}
     />
   );

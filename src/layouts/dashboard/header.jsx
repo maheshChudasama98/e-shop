@@ -16,7 +16,7 @@ import { NAV, HEADER } from './config-layout';
 import AccountPopover from './common/account-popover';
 
 import Iconify from 'src/components/iconify';
-import { shadows } from 'src/theme/shadows';
+// import { shadows } from 'src/theme/shadows';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ export default function Header({ onOpenNav, isActive, setIsActive }) {
         </IconButton>
       )}
 
-      <Typography variant="body12" color="text.dark" fontWeight={600}>
+      <Typography color="text.dark" fontWeight={600}>
         {pageHerder}
       </Typography>
 
@@ -63,7 +63,8 @@ export default function Header({ onOpenNav, isActive, setIsActive }) {
         ...bgBlur({
           color: theme.palette.background.default,
         }),
-        borderBottom: `solid 1px ${theme.palette.grey[300]} `,
+        // borderBottom: `solid 1px ${theme.palette.grey[300]} `,
+        // boxShadow: shadows()[3],
         background: theme.palette.background.light,
         transition: theme.transitions.create(['height'], {
           duration: theme.transitions.duration.shorter,
@@ -72,7 +73,6 @@ export default function Header({ onOpenNav, isActive, setIsActive }) {
           width: `calc(100% - ${isActive ? NAV.SORT_WIDTH : NAV.WIDTH + 1}px)`,
           height: HEADER.H_DESKTOP,
         }),
-        boxShadow: shadows()[3],
       }}
     >
       {renderContent}

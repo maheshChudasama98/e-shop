@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 
 import ButtonLoader from 'src/components/Loaders/ButtonLoader';
-import { AutoCompleteSelectMenu, TextFieldForm } from 'src/components/inputs';
+import { AutoCompleteSelectMenu, CheckboxForm, TextFieldForm } from 'src/components/inputs';
 
 import { Form, Formik } from 'formik';
 
@@ -24,14 +24,22 @@ export default function CategoryModifyModal({ open, handleClose, backAction, edi
   const [modelOpenFlag, setModelOpenFlag] = useState(open);
   const [errorMsg, setErrorMsg] = useState(null);
 
+  const [isSubCategory, setIsSubCategory] = useState(false);
+
   const ActionSubmit = (values) => {
     setFormSubmitLoader(true);
+    const payLoad = {
+      category_name: values.category_name,
+      slug: values.slug,
+      status: values.status,
+      parent_id: isSubCategory ? values.parent_id : null,
+    };
     if (editObject?.category_id) {
-      values.category_id = editObject.category_id;
+      payLoad.category_id = editObject.category_id;
     }
     setErrorMsg(null);
     dispatch(
-      CategoryModifyService(values, (res) => {
+      CategoryModifyService(payLoad, (res) => {
         setFormSubmitLoader(false);
         if (res?.status) {
           setModelOpenFlag(false);
@@ -56,10 +64,11 @@ export default function CategoryModifyModal({ open, handleClose, backAction, edi
   useEffect(() => {
     setModelOpenFlag(open);
     setErrorMsg(null);
+    setIsSubCategory(!!editObject?.parent_id);
 
     if (!open) return;
     dispatch(
-      SelectorsService({ categories_status: true }, (res) => {
+      SelectorsService({ categories_status: true, categories: true }, (res) => {
         setFormSubmitLoader(false);
         if (res?.status) {
           setSelectors(res?.data);
@@ -68,7 +77,7 @@ export default function CategoryModifyModal({ open, handleClose, backAction, edi
         }
       })
     );
-  }, [open]);
+  }, [open, editObject]);
 
   return (
     <ModalDialog
@@ -82,6 +91,8 @@ export default function CategoryModifyModal({ open, handleClose, backAction, edi
             category_name: editObject?.category_name || '',
             slug: editObject?.slug || '',
             status: editObject?.status || 1,
+            parent_id: editObject?.parent_id || null,
+            isSubCategory,
           }}
           validationSchema={Yup.object().shape({
             category_name: Yup.string()
@@ -91,22 +102,28 @@ export default function CategoryModifyModal({ open, handleClose, backAction, edi
               .required('Category name is required'),
             slug: Yup.string().nullable(),
             status: Yup.number().typeError('Status is required').required('Status is required'),
+            parent_id: Yup.string()
+              .nullable()
+              .when('isSubCategory', {
+                is: true,
+                then: (sche) => sche.required('Parent category is required'),
+              }),
           })}
           onSubmit={ActionSubmit}
         >
           {(props) => {
-            const { handleSubmit, dirty, resetForm } = props;
+            const { handleSubmit, dirty, resetForm, setFieldValue } = props;
 
             return (
               <Form>
                 <Grid container spacing={2}>
                   {errorMsg && (
-                    <Grid size={{ xs: 12 }}>
+                    <Grid size={12}>
                       <Alert severity="error">{errorMsg}</Alert>
                     </Grid>
                   )}
 
-                  <Grid size={{ xs: 12 }}>
+                  <Grid size={12}>
                     <TextFieldForm
                       formik={props}
                       label="Category Name"
@@ -115,7 +132,7 @@ export default function CategoryModifyModal({ open, handleClose, backAction, edi
                     />
                   </Grid>
 
-                  <Grid size={{ xs: 12, md: 12 }}>
+                  <Grid size={{ xs: 12, md: 6 }}>
                     <AutoCompleteSelectMenu
                       formik={props}
                       label="Status"
@@ -127,7 +144,7 @@ export default function CategoryModifyModal({ open, handleClose, backAction, edi
                     />
                   </Grid>
 
-                  <Grid size={{ xs: 12 }}>
+                  <Grid size={{ xs: 12, md: 6 }}>
                     <TextFieldForm
                       formik={props}
                       label="Slug"
@@ -137,10 +154,74 @@ export default function CategoryModifyModal({ open, handleClose, backAction, edi
                     />
                   </Grid>
 
-                  <Grid size={{ xs: 12 }}>
+                  <Grid size={{ xs: 12, md: 12 }}>
+                    <CheckboxForm
+                      formik={props}
+                      label="This is a Sub Category"
+                      field="isSubCategory"
+                      onClick={() => {
+                        const newVal = !isSubCategory;
+                        setIsSubCategory(newVal);
+                        if (!newVal) {
+                          setFieldValue('parent_id', null);
+                        }
+                      }}
+                    />
+
+                    {/* <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        mb: 1,
+                        cursor: 'pointer',
+                        userSelect: 'none',
+                      }}
+                      onClick={() => {
+                        const newVal = !isSubCategory;
+                        setIsSubCategory(newVal);
+                        if (!newVal) {
+                          setFieldValue('parent_id', null);
+                        }
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isSubCategory}
+                        onChange={() => {}}
+                        style={{ marginRight: '8px', cursor: 'pointer' }}
+                      />
+                      <Typography variant="body2">This is a Sub Category</Typography>
+                    </Box> */}
+                  </Grid>
+
+                  {isSubCategory && (
+                    <Grid size={{ xs: 12, md: 12 }}>
+                      <AutoCompleteSelectMenu
+                        formik={props}
+                        label="Parent Category"
+                        field="parent_id"
+                        valueKey="category_id"
+                        labelKey="category_name"
+                        menuList={
+                          selectors?.categories?.filter(
+                            (c) => c.category_id !== editObject?.category_id && !c.parent_id
+                          ) || []
+                        }
+                        placeholder="Select parent category"
+                      />
+                    </Grid>
+                  )}
+
+                  <Grid size={{ xs: 12, md: 12 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'end', gap: 1 }}>
                       {dirty && (
-                        <Button variant="outlined" onClick={resetForm}>
+                        <Button
+                          variant="outlined"
+                          onClick={() => {
+                            resetForm();
+                            setIsSubCategory(!!editObject?.parent_id);
+                          }}
+                        >
                           Cancel
                         </Button>
                       )}
@@ -149,7 +230,7 @@ export default function CategoryModifyModal({ open, handleClose, backAction, edi
                         <Button
                           variant="contained"
                           type="submit"
-                          disabled={!dirty}
+                          disabled={!dirty && isSubCategory === !!editObject?.parent_id}
                           onClick={handleSubmit}
                         >
                           {editObject?.category_id ? 'Save Changes' : 'Add Category'}

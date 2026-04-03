@@ -15,7 +15,7 @@ import { sweetAlertQuestion, sweetAlerts, sweetAlertSuccess } from 'src/utils/sw
 
 import { fDateTime12hr } from 'src/utils/format-time';
 import { fText } from 'src/utils/format-text';
-import ProductAdd from './ProductAddModel';
+// import ProductAdd from './ProductAddModel';
 import { SelectorsService } from 'src/Services/master.services';
 import { getDisplayData } from 'src/utils/utils';
 import { ProductDeleteService, ProductsListService } from 'src/Services/product.services';
@@ -39,15 +39,15 @@ export default function Index() {
   const [search, setSearch] = useState('');
   const [loadingLoader, setLoadingLoader] = useState(false);
 
-  const [editObject, setEditObject] = useState({});
-  const [modifyModel, setModifyModel] = useState(false);
+  // const [editObject, setEditObject] = useState({});
+  // const [modifyModel, setModifyModel] = useState(false);
 
   const [selectors, setSelectors] = useState({});
 
-  const showDisplayAction = () => {
-    setModifyModel(false);
-    setApiFlag(!apiFlag);
-  };
+  // const showDisplayAction = () => {
+  //   setModifyModel(false);
+  //   setApiFlag(!apiFlag);
+  // };
 
   const DeleteActions = (id) => {
     sweetAlertQuestion(
@@ -178,8 +178,8 @@ export default function Index() {
             className="mui-action-button"
             onClick={(e) => {
               e.stopPropagation();
-              setModifyModel(true);
-              setEditObject(item);
+              // setModifyModel(true);
+              // setEditObject(item);
             }}
           >
             <i className="fa-solid fa-file-pen" />
@@ -242,7 +242,7 @@ export default function Index() {
 
   return (
     <Card>
-      <Stack spacing={2}>
+      <Stack spacing={1.5}>
         <Stack
           sx={{ px: 1.5, pt: 1.5 }}
           direction={{ xs: 'column', sm: 'row' }}
@@ -272,7 +272,8 @@ export default function Index() {
             <Button
               variant="contained"
               onClick={() => {
-                setModifyModel(true);
+                router.push(ADMIN_ROUTES.PRODUCT_ADD);
+                // setModifyModel(true);
               }}
             >
               Add
@@ -349,7 +350,7 @@ export default function Index() {
           <DataNotFound />
         )}
 
-        <ProductAdd
+        {/* <ProductAdd
           open={modifyModel}
           handleClose={() => {
             setModifyModel(false);
@@ -357,7 +358,7 @@ export default function Index() {
           }}
           editObject={editObject}
           backAction={showDisplayAction}
-        />
+        /> */}
       </Stack>
     </Card>
   );

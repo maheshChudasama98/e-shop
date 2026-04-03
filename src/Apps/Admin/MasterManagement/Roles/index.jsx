@@ -72,7 +72,11 @@ export default function Index() {
       width: 150,
       sorter: true,
       ellipsis: true,
-      render: (item) => fText(item),
+      render: (item) => (
+        <Typography fontWeight={700} variant="caption">
+          {fText(item)}
+        </Typography>
+      ),
     },
     {
       title: 'Description',
@@ -105,10 +109,10 @@ export default function Index() {
       dataIndex: 'action',
       key: 'action',
       fixed: 'right',
-      align: 'center',
+      align: 'right',
       width: 90,
       render: (_, item) => (
-        <Stack spacing={1} direction="row" sx={{ justifyContent: 'center' }}>
+        <Stack spacing={1} direction="row" sx={{ justifyContent: 'right' }}>
           <Button
             variant="outlined"
             className="mui-action-button"
@@ -164,7 +168,7 @@ export default function Index() {
 
   return (
     <Card>
-      <Stack spacing={2}>
+      <Stack spacing={1.5}>
         <Stack
           sx={{ px: 1.5, pt: 1.5 }}
           spacing={2}

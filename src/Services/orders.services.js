@@ -162,3 +162,71 @@ export function AdminOrderDeleteService(payload, cb) {
       });
   };
 }
+ 
+export function AdminAddOrUpdateOrderService(payload, cb) {
+  return (dispatch) => {
+    dispatch({ type: 'FETCH_START' });
+    jwtAuthAxios.defaults.headers.common.Authorization = localStorage.getItem('token');
+    jwtAuthAxios
+      .post(`/admin/orders/add-or-update`, payload)
+      .then((res) => {
+        if (res.data.status) {
+          dispatch({ type: 'FETCH_SUCCESS' });
+          if (cb) cb(res.data);
+        } else {
+          if (cb) cb(res.data);
+          dispatch({ type: 'FETCH_ERROR', payload: res.data.message });
+        }
+      })
+      .catch((error) => {
+        if (cb) cb(error?.response?.data);
+        errorHandler(error, dispatch);
+      });
+  };
+}
+ 
+export function AdminRemoveOrderItemService(payload, cb) {
+  return (dispatch) => {
+    dispatch({ type: 'FETCH_START' });
+    jwtAuthAxios.defaults.headers.common.Authorization = localStorage.getItem('token');
+    jwtAuthAxios
+      .delete(`/admin/orders/item/${payload?.order_item_id}`)
+      .then((res) => {
+        if (res.data.status) {
+          dispatch({ type: 'FETCH_SUCCESS' });
+          if (cb) cb(res.data);
+        } else {
+          if (cb) cb(res.data);
+          dispatch({ type: 'FETCH_ERROR', payload: res.data.message });
+        }
+      })
+      .catch((error) => {
+        errorHandler(error, dispatch);
+      });
+  };
+}
+ 
+export function AdminAddItemToOrderService(payload, cb) {
+  return (dispatch) => {
+    dispatch({ type: 'FETCH_START' });
+    jwtAuthAxios.defaults.headers.common.Authorization = localStorage.getItem('token');
+    jwtAuthAxios
+      .post(`/admin/orders/add-item`, payload)
+      .then((res) => {
+        if (res.data.status) {
+          dispatch({ type: 'FETCH_SUCCESS' });
+          if (cb) cb(res.data);
+        } else {
+          if (cb) cb(res.data);
+          dispatch({ type: 'FETCH_ERROR', payload: res.data.message });
+        }
+      })
+      .catch((error) => {
+        if (cb) cb(error?.response?.data);
+        errorHandler(error, dispatch);
+      });
+  };
+}
+
+
+

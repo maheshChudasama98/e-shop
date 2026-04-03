@@ -19,14 +19,6 @@ export const grey = {
   1000: '#000000',
 };
 
-export const primary = {
-  lighter: '#C8FAD0',
-  light: '#D8FFF2',
-  main: '#3AD29F',
-  dark: '#3AD29F',
-  darker: '#3AD29F',
-  contrastText: '#FFFFFF',
-};
 // export const primary = {
 //   lighter: '#D0ECFE',
 //   light: '#73BAFB',
@@ -35,6 +27,15 @@ export const primary = {
 //   darker: '#042174',
 //   contrastText: '#FFFFFF',
 // };
+
+export const primary = {
+  lighter: '#C8FAD0',
+  light: '#D8FFF2',
+  main: '#3AD29F',
+  dark: '#3AD29F',
+  darker: '#3AD29F',
+  contrastText: '#FFFFFF',
+};
 
 export const secondary = {
   lighter: '#EFD6FF',
@@ -155,6 +156,21 @@ export function palette() {
       neutral: grey[200],
       light: grey[0],
       dark: grey[1000],
+    },
+    muiFormField: {
+      background: grey[200], // form field back ground color,
+
+      // label text color
+      color: grey[1000],
+      colorFocused: grey[1000],
+      colorError: grey[1000],
+
+      // border
+      border: grey[0],
+      borderHover: grey[0],
+      borderFocused: grey[0],
+      borderError: grey[0],
+      borderErrorFocused: grey[0],
     },
     action: {
       ...base.action,

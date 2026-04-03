@@ -44,6 +44,21 @@ export const adminNavConfig = [
         display: true,
       },
       {
+        title: 'Colors',
+        path: ADMIN_ROUTES.COLOR_MANAGEMENT_LIST,
+        display: true,
+      },
+      {
+        title: 'Tabs',
+        path: ADMIN_ROUTES.TABS_MANAGEMENT_LIST,
+        display: true,
+      },
+      {
+        title: 'Certificates',
+        path: ADMIN_ROUTES.CERTIFICATES_MANAGEMENT_LIST,
+        display: true,
+      },
+      {
         title: 'Categories',
         path: ADMIN_ROUTES.CATEGORIES_MANAGEMENT_LIST,
         display: true,

@@ -149,6 +149,10 @@ export function TextFieldForm({
         '& input': {
           textAlign: isAmount || isRight ? 'right' : 'left',
         },
+        '& .MuiInputBase-multiline': {
+          p: 0,
+          m: 0,
+        },
       }}
       InputProps={{
         startAdornment: isAmount && (

@@ -42,7 +42,8 @@ export const CustomSelect = ({
       height="38px"
       px="10px"
       py="5px"
-      borderRadius="5px"
+      borderRadius={1}
+      border={required && !selectedValue ? '1px solid red' : '1px solid transparent'}
     >
       <Typography fontSize={14} color="text.dark" fontWeight={400}>
         {label}:

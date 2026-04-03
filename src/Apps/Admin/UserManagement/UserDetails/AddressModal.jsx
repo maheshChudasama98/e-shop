@@ -14,19 +14,22 @@ import { AdminUserModifyAddressService } from 'src/Services/user.services';
 import { useParams } from 'react-router-dom';
 import { sweetAlertSuccess } from 'src/utils/sweet-alerts';
 
-export default function AddressModal({ open, handleClose, backAction, addressModal }) {
+export default function AddressModal({ open, handleClose, backAction, addressModal, userId }) {
   const { id } = useParams();
   const dispatch = useDispatch();
-
+ 
+  const currentUserId = userId || id;
+ 
   const [formSubmitLoader, setFormSubmitLoader] = useState(false);
   const [modelOpenFlag, setModelOpenFlag] = useState(open);
   const [errorMsg, setErrorMsg] = useState(null);
-
+ 
   const handleAddressSubmit = (values) => {
     setFormSubmitLoader(true);
     if (addressModal.data?.address_id) values.address_id = addressModal.data?.address_id;
     dispatch(
-      AdminUserModifyAddressService({ ...values, user_id: id }, (res) => {
+      AdminUserModifyAddressService({ ...values, user_id: currentUserId }, (res) => {
+
         setFormSubmitLoader(false);
         if (res?.status) {
           backAction();
